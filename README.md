@@ -34,4 +34,4 @@ A public landing page, then a dashboard with a sidebar: Today, Board, Calendar, 
 The work is planned in Jira as one initiative, epics, and tasks, and built in Scrum sprints.
 
 ## Status
-In progress. Planning is done and development has not started yet.# priority-planner
+In progress. Sprint 1 started: project setup is done.
