@@ -35,3 +35,12 @@ The work is planned in Jira as one initiative, epics, and tasks, and built in Sc
 
 ## Status
 In progress. Sprint 1 started: project setup is done.
+
+## Git workflow
+
+1. `main` is the stable branch. We never push to it directly.
+2. `develop` is where finished features are combined.
+3. Each Jira task gets its own branch from `develop`, named like `feature/PP-12-create-task-form`.
+4. Commit messages start with the Jira key.
+5. Pull requests go into `develop` and are reviewed before merging.
+6. Never commit secrets. `.env` stays on your own computer.
