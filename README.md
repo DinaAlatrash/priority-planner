@@ -9,7 +9,7 @@ Many people don't know how to organize their time or which task is more importan
 Priority Planner ranks your tasks by importance, shows a short reason for each ranking, and fits your top tasks into the hours you have available each day.
 
 ## Features
-1. Add tasks with a deadline, time estimate, and a few importance questions
+1. Add tasks with a deadline, time estimate, and an importance level
 2. Priority score with a short reason, shown in colors
 3. To Do / Doing / Done board
 4. Calendar week view
