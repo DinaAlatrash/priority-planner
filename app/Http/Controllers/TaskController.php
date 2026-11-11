@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Task;
 
 class TaskController extends Controller
 {
@@ -34,5 +35,12 @@ class TaskController extends Controller
             ->get(['id', 'title', 'estimated_minutes', 'importance', 'status', 'deadline']);
 
         return view('tasks.index', ['tasks' => $tasks]);
+    }
+
+        public function show(Request $request, Task $task)
+    {
+        abort_unless($task->user_id === $request->user()->id, 404);
+
+        return view('tasks.show', ['task' => $task]);
     }
 }

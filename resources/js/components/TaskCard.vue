@@ -23,12 +23,12 @@ const deadlineText = computed(() => {
 </script>
 
 <template>
-    <div class="card" :style="{ borderLeftColor: level.color }">
+    <a class="card" :href="`/tasks/${task.id}`" :style="{ borderLeftColor: level.color }">
         <div class="title">{{ task.title }}</div>
         <div class="meta">
             {{ deadlineText }} · {{ task.estimated_minutes }} min · {{ level.label }} importance
         </div>
-    </div>
+    </a>
 </template>
 
 <style scoped>
@@ -39,6 +39,9 @@ const deadlineText = computed(() => {
     border-radius: 10px;
     padding: 12px 14px;
     margin-bottom: 10px;
+    display: block;
+    text-decoration: none;
+    color: inherit;
 }
 .title {
     font-weight: 600;
