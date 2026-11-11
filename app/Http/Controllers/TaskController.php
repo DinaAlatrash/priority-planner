@@ -25,4 +25,14 @@ class TaskController extends Controller
 
         return redirect()->route('tasks.create')->with('success', 'Task added.');
     }
+
+        public function index(Request $request)
+    {
+        $tasks = $request->user()->tasks()
+            ->orderByRaw('deadline is null')
+            ->orderBy('deadline')
+            ->get(['id', 'title', 'estimated_minutes', 'importance', 'status', 'deadline']);
+
+        return view('tasks.index', ['tasks' => $tasks]);
+    }
 }
