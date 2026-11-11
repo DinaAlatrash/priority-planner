@@ -1,0 +1,20 @@
+:root {
+    --primary: #5b7b4e;
+    --primary-hover: #4c6a40;
+    --bg: #f6f2ea;
+    --card: #ffffff;
+    --border: #e6dfd2;
+    --text: #2f2a24;
+    --text-secondary: #6e655a;
+
+    --level-high: #c0504d;
+    --level-medium: #d98a3d;
+    --level-low: #6c9a5b;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
