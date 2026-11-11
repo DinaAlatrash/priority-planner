@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import TaskIndex from './pages/TaskIndex.vue';
+import '../css/theme.css';
 
 const el = document.getElementById('app');
 

@@ -1,4 +1,6 @@
 <script setup>
+import TaskCard from '../components/TaskCard.vue';
+
 defineProps({
     tasks: { type: Array, default: () => [] },
     createUrl: String,
@@ -12,13 +14,9 @@ defineProps({
             <a :href="createUrl" class="add">+ Add task</a>
         </header>
 
-        <p v-if="tasks.length === 0">No tasks yet. Add your first one.</p>
+        <p v-if="tasks.length === 0" class="empty">No tasks yet. Add your first one.</p>
 
-        <ul v-else>
-            <li v-for="task in tasks" :key="task.id">
-                {{ task.title }} ({{ task.estimated_minutes }} min)
-            </li>
-        </ul>
+        <TaskCard v-for="task in tasks" :key="task.id" :task="task" />
     </div>
 </template>
 
@@ -26,16 +24,30 @@ defineProps({
 .page {
     max-width: 640px;
     margin: 40px auto;
-    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    padding: 0 16px;
 }
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
+}
+h1 {
+    font-size: 22px;
+    margin: 0;
 }
 .add {
-    color: #3b5bdb;
+    background: var(--primary);
+    color: #fff;
     text-decoration: none;
-    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+.add:hover {
+    background: var(--primary-hover);
+}
+.empty {
+    color: var(--text-secondary);
 }
 </style>
