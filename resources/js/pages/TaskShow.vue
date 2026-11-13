@@ -1,16 +1,26 @@
 <script setup>
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 const props = defineProps({
     task: { type: Object, required: true },
     indexUrl: String,
+    editUrl: String,
+    deleteUrl: String,
+    csrfToken: String,
 });
+
+const showConfirm = ref(false);
+const deleteForm = ref(null);
 
 const deadlineText = computed(() =>
     props.task.deadline
         ? new Date(props.task.deadline).toLocaleString()
         : 'No deadline'
 );
+
+function submitDelete() {
+    deleteForm.value.submit();
+}
 </script>
 
 <template>
@@ -31,6 +41,28 @@ const deadlineText = computed(() =>
             <dt>Status</dt>
             <dd>{{ task.status }}</dd>
         </dl>
+
+        <div class="actions">
+            <a :href="editUrl" class="edit">Edit</a>
+            <button type="button" class="delete" @click="showConfirm = true">Delete</button>
+        </div>
+
+        <form ref="deleteForm" :action="deleteUrl" method="POST" class="hidden-form">
+            <input type="hidden" name="_token" :value="csrfToken" />
+            <input type="hidden" name="_method" value="DELETE" />
+        </form>
+
+        <div v-if="showConfirm" class="overlay" @click.self="showConfirm = false">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+                <h2 id="confirm-title">Delete this task?</h2>
+                <p>"{{ task.title }}" will be removed. This cannot be undone.</p>
+
+                <div class="modal-actions">
+                    <button type="button" class="cancel" @click="showConfirm = false">Cancel</button>
+                    <button type="button" class="confirm" @click="submitDelete">Yes, delete</button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -64,5 +96,86 @@ dt {
 }
 dd {
     margin: 0 0 12px;
+}
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+.edit {
+    background: var(--primary);
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+.edit:hover {
+    background: var(--primary-hover);
+}
+.delete {
+    background: transparent;
+    color: var(--level-high);
+    border: 1px solid var(--level-high);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.delete:hover {
+    background: var(--level-high);
+    color: #fff;
+}
+.hidden-form {
+    display: none;
+}
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(47, 42, 36, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+.modal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px;
+    width: 100%;
+    max-width: 380px;
+}
+.modal h2 {
+    font-size: 18px;
+    margin: 0 0 8px;
+}
+.modal p {
+    color: var(--text-secondary);
+    margin: 0 0 18px;
+}
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.cancel {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.cancel:hover {
+    background: var(--bg);
+}
+.confirm {
+    background: var(--level-high);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
 }
 </style>
