@@ -10,6 +10,10 @@
     --level-high: #c0504d;
     --level-medium: #d98a3d;
     --level-low: #6c9a5b;
+
+     --status-todo: #6b7280;
+    --status-doing: #a05577;
+    --status-done: #5b7b4e;
 }
 
 body {

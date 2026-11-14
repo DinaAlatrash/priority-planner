@@ -18,6 +18,9 @@ const deadlineText = computed(() =>
         : 'No deadline'
 );
 
+const statusLabels = { todo: 'To Do', doing: 'Doing', done: 'Done' };
+const statusText = computed(() => statusLabels[props.task.status] ?? props.task.status);
+
 function submitDelete() {
     deleteForm.value.submit();
 }
@@ -39,7 +42,7 @@ function submitDelete() {
             <dt>Importance</dt>
             <dd>{{ task.importance }}</dd>
             <dt>Status</dt>
-            <dd>{{ task.status }}</dd>
+            <dd>{{ statusText }}</dd>
         </dl>
 
         <div class="actions">
