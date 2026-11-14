@@ -63,6 +63,32 @@ class TaskController extends Controller
         return redirect()->route('tasks.index');
     }
 
+        public function board(Request $request)
+    {
+        $tasks = $request->user()->tasks()
+            ->orderByRaw('deadline is null')
+            ->orderBy('deadline')
+            ->get(['id', 'title', 'estimated_minutes', 'importance', 'status', 'deadline']);
+
+        return view('tasks.board', ['tasks' => $tasks]);
+    }
+
+    public function updateStatus(Request $request, Task $task)
+    {
+        $this->ensureOwner($request, $task);
+
+        $data = $request->validate([
+            'status' => ['required', 'in:todo,doing,done'],
+        ]);
+
+        $task->update([
+            'status' => $data['status'],
+            'completed_at' => $data['status'] === 'done' ? now() : null,
+        ]);
+
+        return response()->json(['id' => $task->id, 'status' => $task->status]);
+    }
+
     private function validated(Request $request, bool $creating): array
     {
         $deadlineRules = ['nullable', 'date'];
