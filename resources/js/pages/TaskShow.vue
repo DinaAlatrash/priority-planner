@@ -1,11 +1,13 @@
 <script setup>
 import { computed, ref } from 'vue';
+import SubtaskList from '../components/SubtaskList.vue';
 
 const props = defineProps({
     task: { type: Object, required: true },
     indexUrl: String,
     editUrl: String,
     deleteUrl: String,
+    subtaskStoreUrl: String,
     csrfToken: String,
 });
 
@@ -44,6 +46,12 @@ function submitDelete() {
             <dt>Status</dt>
             <dd>{{ statusText }}</dd>
         </dl>
+
+            <SubtaskList
+            :initial-subtasks="task.subtasks ?? []"
+            :store-url="subtaskStoreUrl"
+            :csrf-token="csrfToken"
+        />
 
         <div class="actions">
             <a :href="editUrl" class="edit">Edit</a>

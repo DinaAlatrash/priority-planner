@@ -31,9 +31,11 @@ class TaskController extends Controller
         return redirect()->route('tasks.create')->with('success', 'Task added.');
     }
 
-    public function show(Request $request, Task $task)
+        public function show(Request $request, Task $task)
     {
         $this->ensureOwner($request, $task);
+
+        $task->load(['subtasks' => fn ($query) => $query->orderBy('id')]);
 
         return view('tasks.show', ['task' => $task]);
     }
