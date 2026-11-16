@@ -18,6 +18,7 @@ if (el.dataset.page === 'tasks-index') {
         indexUrl: el.dataset.indexUrl,
         editUrl: el.dataset.editUrl,
         deleteUrl: el.dataset.deleteUrl,
+        subtaskStoreUrl: el.dataset.subtaskStoreUrl,
         csrfToken: el.dataset.csrf,
     }).mount(el);
 } else if (el.dataset.page === 'tasks-board') {

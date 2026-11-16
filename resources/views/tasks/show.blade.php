@@ -13,6 +13,7 @@
          data-index-url="{{ route('tasks.index') }}"
          data-edit-url="{{ route('tasks.edit', $task) }}"
          data-delete-url="{{ route('tasks.destroy', $task) }}"
+         data-subtask-store-url="{{ route('subtasks.store', $task) }}"
          data-csrf="{{ csrf_token() }}"></div>
 </body>
 </html>
