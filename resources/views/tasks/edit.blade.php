@@ -1,6 +1,10 @@
-@extends('layouts.app')
+@extends('layouts.shell')
 
 @section('title', 'Edit task')
+
+@push('head')
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+@endpush
 
 @section('content')
 <div class="container py-5" style="max-width: 560px;">

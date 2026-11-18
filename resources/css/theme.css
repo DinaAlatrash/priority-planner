@@ -11,9 +11,27 @@
     --level-medium: #d98a3d;
     --level-low: #6c9a5b;
 
-     --status-todo: #6b7280;
+    --status-todo: #6b7280;
     --status-doing: #a05577;
     --status-done: #5b7b4e;
+
+    --pink: #c2456f;
+    --pink-dark: #a83a5e;
+    --pink-soft: #f1d3dc;
+    --pink-bg: #f7ecee;
+    --pink-line: #ead3d8;
+    --pink-label: #a0757f;
+
+    --bs-primary: #5b7b4e;
+    --bs-primary-rgb: 91, 123, 78;
+    --bs-body-bg: #f6f2ea;
+    --bs-body-color: #2f2a24;
+    --bs-border-color: #e6dfd2;
+    --bs-secondary-color: #6e655a;
+    --bs-link-color: #5b7b4e;
+    --bs-link-color-rgb: 91, 123, 78;
+    --bs-link-hover-color: #4c6a40;
+    --bs-link-hover-color-rgb: 76, 106, 64;
 }
 
 body {
@@ -21,4 +39,31 @@ body {
     background: var(--bg);
     color: var(--text);
     font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--primary);
+    --bs-btn-border-color: var(--primary);
+    --bs-btn-hover-bg: var(--primary-hover);
+    --bs-btn-hover-border-color: var(--primary-hover);
+    --bs-btn-active-bg: var(--primary-hover);
+    --bs-btn-active-border-color: var(--primary-hover);
+    --bs-btn-disabled-bg: var(--primary);
+    --bs-btn-disabled-border-color: var(--primary);
+}
+
+.card {
+    --bs-card-bg: var(--card);
+    --bs-card-border-color: var(--border);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.25rem rgba(91, 123, 78, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
 }
