@@ -12,59 +12,82 @@ class PriorityCalculator
         'low' => 5,
     ];
 
+    private const IMPORTANCE_LABELS = [
+        'high' => 'High importance',
+        'medium' => 'Medium importance',
+        'low' => 'Low importance',
+    ];
+
     private const QUICK_TASK_MINUTES = 15;
     private const QUICK_TASK_BONUS = 5;
 
     public function calculate(Task $task): array
     {
         if ($task->status === 'done') {
-            return ['score' => 0, 'level' => 'done'];
+            return ['score' => 0, 'level' => 'done', 'reason' => 'Completed'];
         }
 
-        $score = $this->deadlinePoints($task)
-            + $this->importancePoints($task)
-            + $this->quickTaskPoints($task);
+        $factors = [
+            $this->deadlineFactor($task),
+            $this->importanceFactor($task),
+            $this->quickTaskFactor($task),
+        ];
+
+        $score = array_sum(array_column($factors, 'points'));
 
         return [
             'score' => $score,
             'level' => $this->level($score),
+            'reason' => $this->reason($factors),
         ];
     }
 
-    private function deadlinePoints(Task $task): int
+    private function deadlineFactor(Task $task): array
     {
         if ($task->deadline === null) {
-            return 0;
+            return ['points' => 0, 'label' => null];
         }
 
         $now = now();
 
         if ($task->deadline->isPast()) {
-            return 50;
+            return ['points' => 50, 'label' => 'Overdue'];
+        }
+        if ($task->deadline->isToday()) {
+            return ['points' => 40, 'label' => 'Due today'];
         }
         if ($task->deadline->lte($now->copy()->addDay()->endOfDay())) {
-            return 40;
+            return ['points' => 40, 'label' => 'Due tomorrow'];
         }
         if ($task->deadline->lte($now->copy()->addDays(3)->endOfDay())) {
-            return 30;
+            return ['points' => 30, 'label' => 'Due within 3 days'];
         }
         if ($task->deadline->lte($now->copy()->addDays(7)->endOfDay())) {
-            return 18;
+            return ['points' => 18, 'label' => 'Due this week'];
         }
 
-        return 8;
+        return ['points' => 8, 'label' => null];
     }
 
-    private function importancePoints(Task $task): int
+    private function importanceFactor(Task $task): array
     {
-        return self::IMPORTANCE_POINTS[$task->importance] ?? self::IMPORTANCE_POINTS['medium'];
+        $importance = array_key_exists($task->importance, self::IMPORTANCE_POINTS)
+            ? $task->importance
+            : 'medium';
+
+        return [
+            'points' => self::IMPORTANCE_POINTS[$importance],
+            'label' => self::IMPORTANCE_LABELS[$importance],
+        ];
     }
 
-    private function quickTaskPoints(Task $task): int
+    private function quickTaskFactor(Task $task): array
     {
-        return $task->estimated_minutes <= self::QUICK_TASK_MINUTES
-            ? self::QUICK_TASK_BONUS
-            : 0;
+        if ($task->estimated_minutes <= self::QUICK_TASK_MINUTES) {
+            return ['points' => self::QUICK_TASK_BONUS, 'label' => 'Quick task'];
+        }
+
+        return ['points' => 0, 'label' => null];
     }
 
     private function level(int $score): string
@@ -75,5 +98,16 @@ class PriorityCalculator
             $score >= 20 => 'medium',
             default => 'low',
         };
+    }
+
+    private function reason(array $factors): string
+    {
+        $labelled = array_filter($factors, fn ($factor) => $factor['label'] !== null);
+
+        usort($labelled, fn ($a, $b) => $b['points'] <=> $a['points']);
+
+        $labels = array_map(fn ($factor) => $factor['label'], array_slice($labelled, 0, 2));
+
+        return implode(' · ', $labels);
     }
 }
