@@ -17,10 +17,24 @@ const definitions = [
     { key: 'done', label: 'Done' },
 ];
 
+function compare(a, b) {
+    const doneA = a.priority_level === 'done' ? 1 : 0;
+    const doneB = b.priority_level === 'done' ? 1 : 0;
+    if (doneA !== doneB) return doneA - doneB;
+
+    if (a.priority_score !== b.priority_score) return b.priority_score - a.priority_score;
+
+    const timeA = a.deadline ? new Date(a.deadline).getTime() : Infinity;
+    const timeB = b.deadline ? new Date(b.deadline).getTime() : Infinity;
+    if (timeA !== timeB) return timeA - timeB;
+
+    return a.id - b.id;
+}
+
 const columns = computed(() =>
     definitions.map((column) => ({
         ...column,
-        tasks: items.value.filter((task) => task.status === column.key),
+        tasks: items.value.filter((task) => task.status === column.key).sort(compare),
     }))
 );
 
@@ -49,6 +63,11 @@ async function moveTask(task, newStatus) {
         if (!response.ok) {
             throw new Error('Request failed');
         }
+
+        const data = await response.json();
+        task.priority_score = data.priority_score;
+        task.priority_level = data.priority_level;
+        task.priority_reason = data.priority_reason;
     } catch (error) {
         task.status = previous;
         errorMessage.value = 'Could not move the task. Please try again.';

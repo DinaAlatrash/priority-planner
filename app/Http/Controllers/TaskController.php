@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Services\PriorityCalculator;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        $tasks = $request->user()->tasks()
-            ->orderByRaw('deadline is null')
-            ->orderBy('deadline')
-            ->get(['id', 'title', 'estimated_minutes', 'importance', 'status', 'deadline']);
+        $tasks = $this->withPriority(
+            $request->user()->tasks()
+                ->get(['id', 'title', 'estimated_minutes', 'importance', 'status', 'deadline'])
+        );
 
         return view('tasks.index', ['tasks' => $tasks]);
     }
@@ -31,11 +33,12 @@ class TaskController extends Controller
         return redirect()->route('tasks.create')->with('success', 'Task added.');
     }
 
-        public function show(Request $request, Task $task)
+    public function show(Request $request, Task $task)
     {
         $this->ensureOwner($request, $task);
 
         $task->load(['subtasks' => fn ($query) => $query->orderBy('id')]);
+        $this->applyPriority($task);
 
         return view('tasks.show', ['task' => $task]);
     }
@@ -65,12 +68,12 @@ class TaskController extends Controller
         return redirect()->route('tasks.index');
     }
 
-        public function board(Request $request)
+    public function board(Request $request)
     {
-        $tasks = $request->user()->tasks()
-            ->orderByRaw('deadline is null')
-            ->orderBy('deadline')
-            ->get(['id', 'title', 'estimated_minutes', 'importance', 'status', 'deadline']);
+        $tasks = $this->withPriority(
+            $request->user()->tasks()
+                ->get(['id', 'title', 'estimated_minutes', 'importance', 'status', 'deadline'])
+        );
 
         return view('tasks.board', ['tasks' => $tasks]);
     }
@@ -88,7 +91,15 @@ class TaskController extends Controller
             'completed_at' => $data['status'] === 'done' ? now() : null,
         ]);
 
-        return response()->json(['id' => $task->id, 'status' => $task->status]);
+        $this->applyPriority($task);
+
+        return response()->json([
+            'id' => $task->id,
+            'status' => $task->status,
+            'priority_score' => $task->priority_score,
+            'priority_level' => $task->priority_level,
+            'priority_reason' => $task->priority_reason,
+        ]);
     }
 
     private function validated(Request $request, bool $creating): array
@@ -111,5 +122,36 @@ class TaskController extends Controller
     private function ensureOwner(Request $request, Task $task): void
     {
         abort_unless($task->user_id === $request->user()->id, 404);
+    }
+
+    private function applyPriority(Task $task): Task
+    {
+        $priority = (new PriorityCalculator())->calculate($task);
+
+        $task->setAttribute('priority_score', $priority['score']);
+        $task->setAttribute('priority_level', $priority['level']);
+        $task->setAttribute('priority_reason', $priority['reason']);
+
+        return $task;
+    }
+
+    private function withPriority(Collection $tasks): Collection
+    {
+        return $tasks
+            ->map(fn (Task $task) => $this->applyPriority($task))
+            ->sort(function (Task $a, Task $b) {
+                return [
+                    $a->priority_level === 'done' ? 1 : 0,
+                    -$a->priority_score,
+                    $a->deadline?->timestamp ?? PHP_INT_MAX,
+                    $a->id,
+                ] <=> [
+                    $b->priority_level === 'done' ? 1 : 0,
+                    -$b->priority_score,
+                    $b->deadline?->timestamp ?? PHP_INT_MAX,
+                    $b->id,
+                ];
+            })
+            ->values();
     }
 }

@@ -23,6 +23,19 @@ const deadlineText = computed(() =>
 const statusLabels = { todo: 'To Do', doing: 'Doing', done: 'Done' };
 const statusText = computed(() => statusLabels[props.task.status] ?? props.task.status);
 
+const priorityLabels = {
+    urgent: 'Urgent',
+    high: 'High',
+    medium: 'Medium',
+    low: 'Low',
+    done: 'Done',
+};
+
+const level = computed(() =>
+    priorityLabels[props.task.priority_level] ? props.task.priority_level : 'medium'
+);
+const levelLabel = computed(() => priorityLabels[level.value]);
+
 function submitDelete() {
     deleteForm.value.submit();
 }
@@ -37,6 +50,11 @@ function submitDelete() {
         <p v-if="task.description" class="description">{{ task.description }}</p>
 
         <dl>
+            <dt>Priority</dt>
+            <dd class="priority">
+                <span class="badge" :class="`p-${level}`">{{ levelLabel }}</span>
+                <span class="reason">{{ task.priority_reason }}</span>
+            </dd>
             <dt>Deadline</dt>
             <dd>{{ deadlineText }}</dd>
             <dt>Estimated time</dt>
@@ -188,5 +206,29 @@ dd {
     padding: 8px 16px;
     border-radius: 8px;
     cursor: pointer;
+}
+
+.priority {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    margin-top: 8px;
+}
+.badge {
+    color: #fff;
+    border-radius: 999px;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 600;
+}
+.badge.p-urgent { background: var(--priority-urgent); }
+.badge.p-high { background: var(--priority-high); }
+.badge.p-medium { background: var(--priority-medium); }
+.badge.p-low { background: var(--priority-low); }
+.badge.p-done { background: var(--priority-done); }
+.reason {
+    color: var(--text-secondary);
+    font-size: 14px;
 }
 </style>

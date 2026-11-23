@@ -15,6 +15,26 @@
     --status-doing: #a05577;
     --status-done: #5b7b4e;
 
+     --priority-urgent: #c0504d;
+    --priority-urgent-bg: #f8e6e4;
+    --priority-urgent-text: #8f2f2c;
+
+    --priority-high: #d98a3d;
+    --priority-high-bg: #fbeedd;
+    --priority-high-text: #8a5314;
+
+    --priority-medium: #dcb93a;
+    --priority-medium-bg: #faf3d8;
+    --priority-medium-text: #7a6410;
+
+    --priority-low: #6c9a5b;
+    --priority-low-bg: #e6efe1;
+    --priority-low-text: #3f6a31;
+
+    --priority-done: #9a9a94;
+    --priority-done-bg: #eeede9;
+    --priority-done-text: #5f5f5a;
+
     --pink: #c2456f;
     --pink-dark: #a83a5e;
     --pink-soft: #f1d3dc;
