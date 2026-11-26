@@ -6,6 +6,7 @@ const props = defineProps({
     tasksUrl: String,
     boardUrl: String,
     createUrl: String,
+    settingsUrl: String,
     logoutUrl: String,
     csrfToken: String,
 });
@@ -30,6 +31,13 @@ const links = computed(() => [
         href: props.createUrl,
         icon: 'M12 5v14M5 12h14',
         active: path === '/tasks/create',
+    },
+
+        {
+        label: 'Settings',
+        href: props.settingsUrl,
+        icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 7v5l3 2',
+        active: path === '/settings',
     },
 ]);
 </script>
