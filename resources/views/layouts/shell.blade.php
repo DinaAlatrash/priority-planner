@@ -22,6 +22,7 @@
              data-tasks-url="{{ route('tasks.index') }}"
              data-board-url="{{ route('tasks.board') }}"
              data-create-url="{{ route('tasks.create') }}"
+             data-settings-url="{{ route('settings.show') }}"
              data-logout-url="{{ route('logout') }}"
              data-csrf="{{ csrf_token() }}"></div>
 

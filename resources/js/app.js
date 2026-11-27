@@ -5,6 +5,7 @@ import Sidebar from './components/Sidebar.vue';
 import TaskIndex from './pages/TaskIndex.vue';
 import TaskShow from './pages/TaskShow.vue';
 import TaskBoard from './pages/TaskBoard.vue';
+import SettingsPage from './pages/SettingsPage.vue';
 
 const sidebarEl = document.getElementById('sidebar');
 
@@ -14,6 +15,7 @@ if (sidebarEl) {
         tasksUrl: sidebarEl.dataset.tasksUrl,
         boardUrl: sidebarEl.dataset.boardUrl,
         createUrl: sidebarEl.dataset.createUrl,
+        settingsUrl: sidebarEl.dataset.settingsUrl,
         logoutUrl: sidebarEl.dataset.logoutUrl,
         csrfToken: sidebarEl.dataset.csrf,
     }).mount(sidebarEl);
@@ -40,6 +42,12 @@ if (el) {
         createApp(TaskBoard, {
             tasks: JSON.parse(el.dataset.tasks),
             indexUrl: el.dataset.indexUrl,
+            csrfToken: el.dataset.csrf,
+        }).mount(el);
+         } else if (el.dataset.page === 'settings') {
+        createApp(SettingsPage, {
+            availableHours: Number(el.dataset.availableHours),
+            updateUrl: el.dataset.updateUrl,
             csrfToken: el.dataset.csrf,
         }).mount(el);
     } else {
