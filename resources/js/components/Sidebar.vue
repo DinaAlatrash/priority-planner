@@ -3,6 +3,7 @@ import { computed } from 'vue';
 
 const props = defineProps({
     userName: String,
+    todayUrl: String,
     tasksUrl: String,
     boardUrl: String,
     createUrl: String,
@@ -14,6 +15,12 @@ const props = defineProps({
 const path = window.location.pathname;
 
 const links = computed(() => [
+        {
+        label: 'Today',
+        href: props.todayUrl,
+        icon: 'M12 4V2M12 22v-2M4 12H2M22 12h-2M6.3 6.3L4.9 4.9M19.1 19.1l-1.4-1.4M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z',
+        active: path === '/today',
+    },
     {
         label: 'Tasks',
         href: props.tasksUrl,
