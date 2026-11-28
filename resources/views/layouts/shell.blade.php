@@ -20,6 +20,7 @@
         <div id="sidebar"
              data-user-name="{{ auth()->user()->name }}"
              data-tasks-url="{{ route('tasks.index') }}"
+             data-today-url="{{ route('today.show') }}"
              data-board-url="{{ route('tasks.board') }}"
              data-create-url="{{ route('tasks.create') }}"
              data-settings-url="{{ route('settings.show') }}"

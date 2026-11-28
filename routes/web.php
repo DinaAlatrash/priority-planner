@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\SubtaskController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\TodayController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -36,4 +37,5 @@ Route::middleware('auth')->group(function () {
     Route::delete('/subtasks/{subtask}', [SubtaskController::class, 'destroy'])->name('subtasks.destroy');
     Route::get('/settings', [SettingsController::class, 'show'])->name('settings.show');
     Route::patch('/settings', [SettingsController::class, 'update'])->name('settings.update');
+    Route::get('/today', [TodayController::class, 'show'])->name('today.show');
 });
